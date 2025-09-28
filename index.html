@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pennywise App</title>
+    <!-- Use the Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #111827;
+        }
+        .text-primary-color {
+            color: #6C63FF;
+        }
+        .bg-primary-color {
+            background-color: #6C63FF;
+        }
+        .text-secondary-color {
+            color: #FF6584;
+        }
+        .bg-secondary-color {
+            background-color: #FF6584;
+        }
+        .bg-accent-color {
+            background-color: #10B981;
+        }
+        .text-primary-text {
+            color: #111827;
+        }
+        .text-secondary-text {
+            color: #6B7280;
+        }
+        .card-bg-1 { background-color: #FFE5E5; }
+        .card-bg-2 { background-color: #E6F4FF; }
+        .card-bg-3 { background-color: #FFF6E5; }
+        .card-bg-4 { background-color: #E9F9F0; }
+        .card-bg-5 { background-color: #F3E8FF; }
+
+        .shadow-card {
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-4 md:p-8 overflow-y-auto no-scrollbar pb-24">
+        <header class="mb-6">
+            <h1 class="text-sm text-secondaryText mb-1 break-all">Pennywise App</h1>
+        </header>
+        <!-- Content for Home View -->
+        <div id="home-view" class="active-view">
+            <header class="mb-6">
+                <h1 class="text-2xl font-bold text-textPrimary mb-1">Overview</h1>
+                <p class="text-sm text-secondaryText">Your financial snapshot</p>
+            </header>
+
+            <!-- Line Chart Section -->
+            <div class="bg-white rounded-2xl p-4 shadow-card mb-4 md:mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-lg font-semibold text-textPrimary">Spending Trends</h2>
+                    <span class="text-sm text-secondaryText">Last 30 days</span>
+                </div>
+                <div class="h-48 md:h-64">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Progress Circle & Cards Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Progress Circle Card -->
+                <div class="card-bg-2 rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-card">
+                    <h3 class="text-textPrimary font-semibold mb-2 text-sm">Monthly Goal</h3>
+                    <div class="relative w-24 h-24 mb-2">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#E6F4FF" stroke-width="8" fill="none"></circle>
+                            <circle id="progressCircle" cx="50" cy="50" r="45" stroke="#FF6584" stroke-width="8" fill="none" stroke-linecap="round" transform="rotate(-90 50 50)"></circle>
+                        </svg>
+                        <span id="progressText" class="absolute inset-0 flex items-center justify-center text-xl font-bold text-secondary-color"></span>
+                    </div>
+                    <p class="text-xs text-secondaryText">50% reached</p>
+                </div>
+                <!-- Data Cards -->
+                <div class="card-bg-4 rounded-2xl p-4 flex flex-col justify-between shadow-card">
+                    <div>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-2 card-bg-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-accent-color" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM9.5 7h5a.5.5 0 0 1 .5.5V9a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5V7.5a.5.5 0 0 1 .5-.5zM12 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm.5 2.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V12a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1.5zM12 17a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-semibold text-textPrimary mt-2">Savings</h3>
+                        <p class="text-lg font-bold text-textPrimary my-1">₹1,250</p>
+                        <p class="text-xs text-secondaryText">Target: ₹2,000</p>
+                    </div>
+                </div>
+                <div class="card-bg-3 rounded-2xl p-4 flex flex-col justify-between shadow-card">
+                    <div>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-2 card-bg-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-color" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22 6c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6zm-2 0l-8 5.334L4 6h16zM4 18V8.309l7.304 4.87a1 1 0 0 0 .707.291 1 1 0 0 0 .707-.291L20 8.309V18H4z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-semibold text-textPrimary mt-2">Subscriptions</h3>
+                        <p class="text-lg font-bold text-textPrimary my-1">₹58</p>
+                        <p class="text-xs text-secondaryText">Due monthly</p>
+                    </div>
+                </div>
+                <div class="card-bg-5 rounded-2xl p-4 flex flex-col justify-between shadow-card">
+                    <div>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-2 card-bg-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-secondary-color" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1 14h-2V7h2v9zm6-2h-2v-4h2v4z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-semibold text-textPrimary mt-2">Investments</h3>
+                        <p class="text-lg font-bold text-textPrimary my-1">₹5,200</p>
+                        <p class="text-xs text-secondaryText">+12% this year</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content for Wallet View -->
+        <div id="wallet-view" class="hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-2xl font-bold text-textPrimary">Wallet</h1>
+                <div class="flex flex-col items-end">
+                    <span class="text-sm text-secondaryText">Current Balance</span>
+                    <span id="current-balance" class="text-xl font-bold text-accent-color">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Transaction Form -->
+            <div class="bg-white rounded-2xl p-4 shadow-card mb-4">
+                <h2 class="text-lg font-semibold text-textPrimary mb-3">Add New Transaction</h2>
+                <form id="transaction-form" class="space-y-3">
+                    <div>
+                        <label for="description" class="text-sm font-medium text-secondaryText">Description</label>
+                        <input type="text" id="description" placeholder="e.g., Coffee, Salary" class="w-full px-4 py-2 mt-1 rounded-xl bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-color">
+                        <!-- Quick category buttons -->
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button type="button" class="category-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Food</button>
+                            <button type="button" class="category-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Transport</button>
+                            <button type="button" class="category-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Shopping</button>
+                            <button type="button" class="category-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Utilities</button>
+                            <button type="button" class="category-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Rent</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="amount" class="text-sm font-medium text-secondaryText">Amount (₹)</label>
+                        <input type="text" id="amount" inputmode="decimal" placeholder="0.00" class="w-full px-4 py-2 mt-1 rounded-xl bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-color" required>
+                        <!-- Quick amount buttons -->
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button type="button" class="amount-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">50</button>
+                            <button type="button" class="amount-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">100</button>
+                            <button type="button" class="amount-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">500</button>
+                            <button type="button" class="amount-btn text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">1000</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label class="text-sm font-medium text-secondaryText">Type</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="type" value="expense" class="h-4 w-4 text-secondary-color" checked>
+                                <span class="ml-2 text-sm text-secondary-text">Expense</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="type" value="income" class="h-4 w-4 text-accent-color">
+                                <span class="ml-2 text-sm text-secondary-text">Income</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-primary-color text-white px-4 py-2 rounded-xl text-center font-medium hover:bg-opacity-90 transition-colors">Add Transaction</button>
+                </form>
+            </div>
+
+            <!-- Transaction History -->
+            <h2 class="text-lg font-semibold text-textPrimary mb-3">Transaction History</h2>
+            <div id="transaction-list" class="space-y-3">
+                <p class="text-secondaryText text-center">Loading transactions...</p>
+            </div>
+        </div>
+
+        <!-- Content for Analytics View (Initially Hidden) -->
+        <div id="analytics-view" class="hidden">
+            <h1 class="text-2xl font-bold text-textPrimary mb-4">Analytics</h1>
+            <div class="bg-white rounded-2xl p-4 shadow-card">
+                <div class="h-64 md:h-96">
+                    <canvas id="fullLineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content for Settings View (Initially Hidden) -->
+        <div id="settings-view" class="hidden">
+            <h1 class="text-2xl font-bold text-textPrimary mb-4">Settings</h1>
+            <div class="bg-white rounded-2xl p-6 text-center shadow-card">
+                <p class="text-secondaryText">Manage your app preferences and profile settings here.</p>
+            </div>
+        </div>
+        
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4 rounded-t-2xl flex justify-around items-center">
+        <button data-target="home-view" class="nav-item flex flex-col items-center text-primary-color font-semibold active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zM8 12a4 4 0 1 1 4 4 4 4 0 0 1-4-4z"></path>
+            </svg>
+            <span class="text-xs mt-1 hidden sm:block">Home</span>
+        </button>
+        <button data-target="wallet-view" class="nav-item flex flex-col items-center text-secondaryText">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 4H3c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h18c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 14H3V6h18v12z"></path>
+            </svg>
+            <span class="text-xs mt-1 hidden sm:block">Wallet</span>
+        </button>
+        <button data-target="analytics-view" class="nav-item flex flex-col items-center text-secondaryText">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 21H3V3h2v16h16v2zM15 17h-2V7h2v10zM11 15H9V9h2v6zM7 13H5v1h2v-1z"></path>
+            </svg>
+            <span class="text-xs mt-1 hidden sm:block">Analytics</span>
+        </button>
+        <button data-target="settings-view" class="nav-item flex flex-col items-center text-secondaryText">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
+            </svg>
+            <span class="text-xs mt-1 hidden sm:block">Settings</span>
+        </button>
+    </nav>
+    <div id="modal-container" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm text-center">
+            <h3 id="modal-title" class="text-lg font-semibold mb-2"></h3>
+            <p id="modal-message" class="text-sm text-gray-600 mb-4"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="modal-confirm" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">Confirm</button>
+                <button id="modal-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const transactionForm = document.getElementById('transaction-form');
+            const transactionList = document.getElementById('transaction-list');
+            const balanceDisplay = document.getElementById('current-balance');
+            const amountInput = document.getElementById('amount');
+            const descriptionInput = document.getElementById('description');
+
+            // Custom modal for confirmations (replaces `confirm()`)
+            const modalContainer = document.getElementById('modal-container');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalConfirm = document.getElementById('modal-confirm');
+            const modalCancel = document.getElementById('modal-cancel');
+
+            const showModal = (title, message, onConfirm) => {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modalContainer.classList.remove('hidden');
+
+                const confirmHandler = () => {
+                    onConfirm();
+                    hideModal();
+                };
+
+                const cancelHandler = () => {
+                    hideModal();
+                };
+                
+                modalConfirm.addEventListener('click', confirmHandler, { once: true });
+                modalCancel.addEventListener('click', cancelHandler, { once: true });
+            };
+
+            const hideModal = () => {
+                modalContainer.classList.add('hidden');
+            };
+
+            // This function loads transactions from local storage and updates the UI.
+            const loadTransactions = () => {
+                // Get the data from local storage, or use an empty array if it's the first time
+                const transactionsJson = localStorage.getItem('transactions');
+                const transactions = transactionsJson ? JSON.parse(transactionsJson) : [];
+                
+                // Calculate and display the total balance
+                let totalBalance = 0;
+                transactions.forEach(t => {
+                    if (t.type === 'income') {
+                        totalBalance += t.amount;
+                    } else {
+                        totalBalance -= t.amount;
+                    }
+                });
+                balanceDisplay.textContent = `₹${totalBalance.toFixed(2)}`;
+                
+                // Render the transactions on the page
+                renderTransactions(transactions);
+            };
+
+            // This function adds a new transaction to local storage.
+            const addTransaction = (e) => {
+                e.preventDefault();
+                
+                const transactionsJson = localStorage.getItem('transactions');
+                let transactions = transactionsJson ? JSON.parse(transactionsJson) : [];
+
+                const description = descriptionInput.value;
+                const amount = parseFloat(amountInput.value);
+                const type = transactionForm.querySelector('input[name="type"]:checked').value;
+
+                if (!description || isNaN(amount)) {
+                    console.error("Invalid transaction data.");
+                    return;
+                }
+
+                const newTransaction = {
+                    id: crypto.randomUUID(), // Assign a unique ID for deletion
+                    description,
+                    amount,
+                    type,
+                    createdAt: Date.now()
+                };
+
+                transactions.push(newTransaction);
+                // Save the updated array back to local storage
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+                
+                // Re-render the UI and reset the form
+                loadTransactions();
+                transactionForm.reset();
+            };
+
+            // This function deletes a transaction from local storage.
+            const deleteTransaction = (transactionId) => {
+                const transactionsJson = localStorage.getItem('transactions');
+                let transactions = transactionsJson ? JSON.parse(transactionsJson) : [];
+                
+                const updatedTransactions = transactions.filter(t => t.id !== transactionId);
+                
+                localStorage.setItem('transactions', JSON.stringify(updatedTransactions));
+                
+                // Re-render the UI
+                loadTransactions();
+            };
+
+            transactionList.addEventListener('click', (e) => {
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    const transactionId = deleteBtn.getAttribute('data-id');
+                    showModal('Confirm Deletion', 'Are you sure you want to delete this transaction?', () => {
+                        deleteTransaction(transactionId);
+                    });
+                }
+            });
+
+            const renderTransactions = (transactions) => {
+                if (transactions.length === 0) {
+                    transactionList.innerHTML = '<p class="text-secondaryText text-center">No transactions yet. Add one above!</p>';
+                    return;
+                }
+
+                transactions.sort((a, b) => b.createdAt - a.createdAt);
+
+                transactionList.innerHTML = transactions.map(t => {
+                    const amountClass = t.type === 'income' ? 'text-accent-color' : 'text-secondary-color';
+                    const sign = t.type === 'income' ? '+' : '-';
+                    const iconPath = t.type === 'income' ?
+                        `<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM12 7l-4 4h3v4h2v-4h3l-4-4z"></path>` :
+                        `<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM12 17l-4-4h3v-4h2v4h3l-4 4z"></path>`;
+                    
+                    return `
+                        <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-card">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'income' ? 'bg-green-100' : 'bg-red-100'}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ${amountClass}" viewBox="0 0 24 24" fill="currentColor">
+                                        ${iconPath}
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="font-semibold text-sm text-textPrimary">${t.description}</h3>
+                                    <p class="text-xs text-secondaryText">${new Date(t.createdAt).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-sm ${amountClass}">${sign}₹${t.amount.toFixed(2)}</span>
+                                <button class="delete-btn" data-id="${t.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 hover:text-red-500 transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.243 12.828-1.414 1.415L12 13.414l-2.829 2.829-1.414-1.415L10.586 12 7.757 9.172l1.414-1.415L12 10.586l2.829-2.829 1.414 1.415L13.414 12l2.829 2.828z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            };
+
+            // Call loadTransactions when the page loads
+            loadTransactions();
+
+            transactionForm.addEventListener('submit', addTransaction);
+            document.querySelectorAll('.amount-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    amountInput.value = button.textContent;
+                });
+            });
+            document.querySelectorAll('.category-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    descriptionInput.value = button.textContent;
+                });
+            });
+
+            const progressCircle = document.getElementById('progressCircle');
+            const progressText = document.getElementById('progressText');
+            const progressValue = 50; 
+            const radius = 45;
+            const circumference = 2 * Math.PI * radius;
+            const strokeDashoffset = circumference - (progressValue / 100) * circumference;
+            progressCircle.style.strokeDasharray = circumference;
+            progressCircle.style.transition = 'stroke-dashoffset 1s ease-in-out';
+            progressCircle.style.strokeDashoffset = strokeDashoffset;
+            progressText.textContent = `${progressValue}%`;
+
+            const createChart = (canvasId, data, label) => {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            borderColor: '#6C63FF',
+                            backgroundColor: 'rgba(108, 99, 255, 0.2)',
+                            pointBackgroundColor: '#6C63FF',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#6C63FF',
+                            fill: true,
+                            tension: 0.4, 
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { display: true, color: '#E5E7EB', drawBorder: false, }, ticks: { color: '#6B7280' } },
+                            x: { grid: { display: false, }, ticks: { color: '#6B7280' } }
+                        }
+                    }
+                });
+            };
+            const mockData = [65, 59, 80, 81, 56, 55, 40];
+            createChart('lineChart', mockData, 'Monthly Spending');
+            createChart('fullLineChart', mockData, 'Detailed Spending Trends');
+
+            const navItems = document.querySelectorAll('.nav-item');
+            const views = document.querySelectorAll('[id$="-view"]');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => {
+                        nav.classList.remove('text-primary-color', 'active');
+                        nav.classList.add('text-secondaryText');
+                    });
+                    views.forEach(view => view.classList.add('hidden'));
+                    item.classList.add('text-primary-color', 'active');
+                    item.classList.remove('text-secondaryText');
+                    const targetId = item.getAttribute('data-target');
+                    document.getElementById(targetId).classList.remove('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
